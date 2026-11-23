@@ -2,7 +2,7 @@
 //  CONFIGURACIÓN GENERAL DEL SITIO — edita estos datos
 // ================================================================
 export const SITE = {
-  nombre: 'CloudRTU',
+  nombre: 'CloudECT',
   eslogan: 'Maquetas didácticas para Formación Profesional y Universidad',
   descripcion:
     'Catálogo de maquetas y entrenadores didácticos para centros de Formación Profesional y universidades: automatización, electricidad, telecontrol y más.',
