@@ -1,38 +1,78 @@
 ---
 import { getCollection } from 'astro:content';
 import Base from '../layouts/Base.astro';
-import MaquetaCard from '../components/MaquetaCard.astro';
 import { FAMILIAS, NIVELES } from '../site.config';
+import { url } from '../utils';
 
 const todas = (await getCollection('maquetas')).sort((a, b) => a.data.orden - b.data.orden);
 const familias = FAMILIAS.filter((f) => todas.some((m) => m.data.familias.includes(f)));
+const tematicas = [...new Set(todas.map((m) => m.data.tematica))].sort();
 ---
-<Base title="Catálogo" description="Catálogo de maquetas y entrenadores didácticos para FP y universidad.">
-  <section class="section">
+<Base title="Catálogo técnico" description="Catálogo técnico de maquetas y entrenadores didácticos para FP y universidad.">
+  <section class="section" style="padding-top:40px">
     <div class="container">
-      <span class="eyebrow">Catálogo</span>
-      <h1>Maquetas didácticas</h1>
-      <p class="muted">Filtra por familia profesional, nivel educativo o busca por nombre o referencia.</p>
+      <div class="tech-head">
+        <div>
+          <span class="eyebrow">Catálogo técnico</span>
+          <h1 style="font-size:clamp(1.8rem,3.5vw,2.4rem); margin:6px 0 0">Todas las maquetas</h1>
+        </div>
+        <label class="tech-search">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><circle cx="11" cy="11" r="7"></circle><path d="m20 20-3.5-3.5"></path></svg>
+          <input type="search" id="q" placeholder="Buscar por referencia, modelo o tecnología…" aria-label="Buscar maquetas" />
+        </label>
+      </div>
 
-      <div class="catalog" style="margin-top:32px">
-        <aside class="filters" aria-label="Filtros">
-          <h3>Buscar</h3>
-          <input type="search" id="q" placeholder="PLC, neumática, MD-RTU…" aria-label="Buscar maquetas" />
+      <div class="tech-layout">
+        <aside class="tech-filters" aria-label="Filtros">
           <h3>Nivel educativo</h3>
-          {NIVELES.map((n) => (
-            <label><input type="checkbox" name="nivel" value={n} /> {n}</label>
-          ))}
+          {NIVELES.map((n) => <label><input type="checkbox" name="nivel" value={n} /> {n}</label>)}
+          <h3>Temática</h3>
+          {tematicas.map((t) => <label><input type="checkbox" name="tematica" value={t} /> {t}</label>)}
           <h3>Familia profesional</h3>
-          {familias.map((f) => (
-            <label><input type="checkbox" name="familia" value={f} /> {f}</label>
-          ))}
+          {familias.map((f) => <label><input type="checkbox" name="familia" value={f} /> {f}</label>)}
           <button class="link-btn" id="reset" type="button">Limpiar filtros</button>
         </aside>
 
         <div>
-          <div class="results-bar"><span id="count">{todas.length} maquetas</span></div>
-          <div class="grid" id="results">
-            {todas.map((m) => <MaquetaCard maqueta={m} />)}
+          <div class="tech-toolbar">
+            <span id="count">{todas.length} maquetas</span>
+            <label>Ordenar por&nbsp;
+              <select id="orden">
+                <option value="orden">Relevancia</option>
+                <option value="ref">Referencia</option>
+                <option value="nombre">Nombre</option>
+              </select>
+            </label>
+          </div>
+          <div class="tech-list" id="results">
+            {todas.map((m, i) => {
+              const d = m.data;
+              const ficha = d.documentos[0];
+              const presupuesto = url(`contacto?maqueta=${encodeURIComponent(`${d.referencia} - ${d.titulo}`)}`);
+              return (
+                <article class="tech-row"
+                  data-orden={i} data-ref={d.referencia} data-nombre={d.titulo}
+                  data-familias={d.familias.join('|')} data-niveles={d.niveles.join('|')} data-tematica={d.tematica}
+                  data-texto={`${d.titulo} ${d.referencia} ${d.resumen} ${d.tematica} ${d.especificaciones.map((s) => s.valor).join(' ')}`.toLowerCase()}>
+                  <a href={url(`maquetas/${m.id}`)} tabindex="-1"><img src={url(d.imagen)} alt={d.titulo} loading="lazy" width="1600" height="960" /></a>
+                  <div class="tech-info">
+                    <span class="ref mono">{d.referencia} · {d.tematica}</span>
+                    <h2><a href={url(`maquetas/${m.id}`)}>{d.titulo}</a></h2>
+                    {d.especificaciones.length > 0 && (
+                      <dl class="tech-specs">
+                        {d.especificaciones.slice(0, 3).map((s) => <div><dt>{s.nombre}</dt><dd title={s.valor}>{s.valor}</dd></div>)}
+                      </dl>
+                    )}
+                    <div class="tags" style="padding-top:2px">{d.niveles.map((n) => <span class="tag tag-level">{n}</span>)}</div>
+                  </div>
+                  <div class="tech-actions">
+                    <a class="btn btn-primary" href={presupuesto}>Solicitar presupuesto</a>
+                    <a class="btn btn-outline" href={url(`maquetas/${m.id}`)}>Ver ficha</a>
+                    {ficha && <a class="muted-link" href={url(ficha.archivo)} download>Descargar PDF</a>}
+                  </div>
+                </article>
+              );
+            })}
           </div>
           <div class="empty" id="empty" hidden>No hay maquetas que coincidan con los filtros. <button class="link-btn" id="reset2" type="button">Limpiar filtros</button></div>
         </div>
@@ -42,44 +82,42 @@ const familias = FAMILIAS.filter((f) => todas.some((m) => m.data.familias.includ
 
   <script>
     const q = document.getElementById('q') as HTMLInputElement;
-    const cards = Array.from(document.querySelectorAll<HTMLElement>('#results .card'));
-    const boxes = Array.from(document.querySelectorAll<HTMLInputElement>('.filters input[type=checkbox]'));
+    const list = document.getElementById('results')!;
+    const rows = Array.from(list.querySelectorAll<HTMLElement>('.tech-row'));
+    const boxes = Array.from(document.querySelectorAll<HTMLInputElement>('.tech-filters input[type=checkbox]'));
+    const orden = document.getElementById('orden') as HTMLSelectElement;
     const count = document.getElementById('count')!;
     const empty = document.getElementById('empty')!;
-
     const checked = (name: string) => boxes.filter((b) => b.name === name && b.checked).map((b) => b.value);
 
     function apply() {
       const texto = q.value.trim().toLowerCase();
-      const niveles = checked('nivel');
-      const familias = checked('familia');
-      let visibles = 0;
-      for (const c of cards) {
-        const cn = c.dataset.niveles!.split('|');
-        const cf = c.dataset.familias!.split('|');
+      const niveles = checked('nivel'), familias = checked('familia'), tematicas = checked('tematica');
+      let n = 0;
+      for (const r of rows) {
         const ok =
-          (!texto || c.dataset.texto!.includes(texto)) &&
-          (!niveles.length || niveles.some((n) => cn.includes(n))) &&
-          (!familias.length || familias.some((f) => cf.includes(f)));
-        c.hidden = !ok;
-        if (ok) visibles++;
+          (!texto || r.dataset.texto!.includes(texto)) &&
+          (!niveles.length || niveles.some((v) => r.dataset.niveles!.split('|').includes(v))) &&
+          (!familias.length || familias.some((v) => r.dataset.familias!.split('|').includes(v))) &&
+          (!tematicas.length || tematicas.includes(r.dataset.tematica!));
+        r.hidden = !ok;
+        if (ok) n++;
       }
-      count.textContent = `${visibles} ${visibles === 1 ? 'maqueta' : 'maquetas'}`;
-      empty.hidden = visibles > 0;
+      count.textContent = `${n} ${n === 1 ? 'maqueta' : 'maquetas'}`;
+      empty.hidden = n > 0;
     }
-
-    function reset() {
-      q.value = '';
-      boxes.forEach((b) => (b.checked = false));
-      apply();
+    function sort() {
+      const k = orden.value;
+      rows.sort((a, b) => k === 'orden' ? +a.dataset.orden! - +b.dataset.orden! : a.dataset[k]!.localeCompare(b.dataset[k]!, 'es'))
+        .forEach((r) => list.appendChild(r));
     }
+    function reset() { q.value = ''; boxes.forEach((b) => (b.checked = false)); apply(); }
 
-    // Filtro inicial desde la URL (?familia=...&nivel=...)
     const params = new URLSearchParams(location.search);
     for (const b of boxes) if (params.getAll(b.name).includes(b.value)) b.checked = true;
-
     q.addEventListener('input', apply);
     boxes.forEach((b) => b.addEventListener('change', apply));
+    orden.addEventListener('change', sort);
     document.getElementById('reset')!.addEventListener('click', reset);
     document.getElementById('reset2')!.addEventListener('click', reset);
     apply();

@@ -2,6 +2,7 @@
 import '../styles/global.css';
 import { SITE } from '../site.config';
 import { url } from '../utils';
+import { THEME, MOSTRAR_SELECTOR_DISENO, RUTAS_DISENO } from '../theme';
 
 interface Props { title?: string; description?: string; }
 const { title, description = SITE.descripcion } = Astro.props;
@@ -12,11 +13,14 @@ const links = [
   { href: 'catalogo', label: 'Catálogo' },
   { href: 'nosotros', label: 'Nosotros' },
 ];
+// Raíz común de ambos diseños (para el selector de diseño)
+const raizSitio = import.meta.env.BASE_URL.replace(/\/$/, '').replace(/\/premium$/, '');
+const enlaceDiseno = (t: 'industrial' | 'premium') => `${raizSitio}/${RUTAS_DISENO[t]}`;
 const isActive = (href: string) =>
   href === '' ? path === '/' : path.startsWith('/' + href);
 ---
 <!doctype html>
-<html lang="es">
+<html lang="es" data-theme={THEME}>
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
@@ -27,13 +31,22 @@ const isActive = (href: string) =>
     <meta property="og:type" content="website" />
     <link rel="icon" type="image/svg+xml" href={url('favicon.svg')} />
     <link rel="preconnect" href="https://fonts.googleapis.com" />
-    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" />
+    <link rel="stylesheet" href={THEME === 'premium'
+      ? 'https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,500;0,9..144,600;1,9..144,500&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap'
+      : 'https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap'} />
   </head>
   <body>
+    {MOSTRAR_SELECTOR_DISENO && (
+      <div class="design-switch">
+        <span>Vista previa de diseño:</span>
+        <a href={enlaceDiseno('industrial')} aria-current={THEME === 'industrial' ? 'true' : undefined}>Industrial</a>
+        <a href={enlaceDiseno('premium')} aria-current={THEME === 'premium' ? 'true' : undefined}>Premium</a>
+      </div>
+    )}
     <header class="site-header">
       <nav class="container nav" aria-label="Principal">
         <a class="brand" href={url()}>
-          <img src={url('favicon.svg')} alt="" width="32" height="32" />
+          {THEME === 'industrial' && <img src={url('favicon.svg')} alt="" width="32" height="32" />}
           {SITE.nombre}
         </a>
         <button class="menu-toggle" aria-label="Abrir menú" aria-expanded="false" aria-controls="nav-links">☰</button>

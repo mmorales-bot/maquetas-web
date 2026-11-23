@@ -1,0 +1,67 @@
+---
+import type { CollectionEntry } from 'astro:content';
+import MaquetaCard from './MaquetaCard.astro';
+import { url } from '../utils';
+interface Props { todas: CollectionEntry<'maquetas'>[]; }
+const { todas } = Astro.props;
+const destacadas = todas.filter((m) => m.data.destacada).slice(0, 6);
+const principal = destacadas[0] ?? todas[0];
+const imgPrincipal = principal ? (principal.data.galeria[0] ?? principal.data.imagen) : '';
+const anio = new Date().getFullYear();
+---
+<section class="p-hero">
+  <div class="container">
+    <div class="p-hero-grid">
+      <div>
+        <span class="eyebrow">Equipamiento didáctico · Edición {anio}</span>
+        <h1>La técnica se aprende <em>tocándola.</em></h1>
+        <p>Maquetas de automatización con componentes industriales, pensadas para aulas de Formación Profesional y laboratorios universitarios.</p>
+        <a class="p-link" href={url('catalogo')}>Descubrir la colección →</a>
+      </div>
+      {principal && (
+        <a class="p-hero-img" href={url(`maquetas/${principal.id}`)}>
+          <img src={url(imgPrincipal)} alt={principal.data.titulo} />
+        </a>
+      )}
+    </div>
+    <div class="p-strip">
+      {destacadas.slice(0, 2).map((m) => (
+        <a href={url(`maquetas/${m.id}`)}><strong>{m.data.titulo}</strong><span>Ref. {m.data.referencia}</span></a>
+      ))}
+      <a href={url('nosotros')}><strong>Formación incluida</strong><span>Puesta en marcha en el centro</span></a>
+    </div>
+  </div>
+</section>
+
+<section class="section">
+  <div class="container">
+    <span class="eyebrow">La colección</span>
+    <h2>Maquetas destacadas</h2>
+    <div class="grid" style="margin-top:28px">
+      {destacadas.map((m) => <MaquetaCard maqueta={m} />)}
+    </div>
+    <p style="margin-top:32px"><a class="p-link" href={url('catalogo')}>Ver el catálogo técnico completo →</a></p>
+  </div>
+</section>
+
+<section class="section section-alt">
+  <div class="container">
+    <p class="p-quote">“El alumnado trabaja con los mismos equipos que encontrará en la empresa, y el profesorado recibe todo lo necesario para enseñar con ellos.”</p>
+    <div class="features" style="margin-top:48px">
+      <div class="feature"><h3>Alineadas con el currículo</h3><p>Cada maqueta indica los ciclos y grados a los que da respuesta.</p></div>
+      <div class="feature"><h3>Componentes industriales</h3><p>Tecnología real, montada, cableada y probada.</p></div>
+      <div class="feature"><h3>Guías de prácticas</h3><p>Documentación técnica y prácticas progresivas.</p></div>
+      <div class="feature"><h3>Soporte y formación</h3><p>Instalación, formación al profesorado y posventa.</p></div>
+    </div>
+  </div>
+</section>
+
+<section class="container" style="margin-top:64px">
+  <div class="cta">
+    <div>
+      <h2 style="margin:0 0 6px; color:#f6f5f1">¿Equipando un aula o laboratorio?</h2>
+      <p>Preparamos una propuesta a medida para tu centro.</p>
+    </div>
+    <a class="btn btn-primary" href={url('contacto')}>Pedir presupuesto</a>
+  </div>
+</section>
