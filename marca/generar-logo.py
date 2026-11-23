@@ -140,6 +140,7 @@ files = {
  'didactek-horizontal-sin-lema.svg': logo_horizontal(sub=False),
  'didactek-horizontal-blanco.svg': logo_horizontal('#ffffff', '#7CC4FF'),
  'didactek-vertical-blanco.svg': logo_vertical('#ffffff', '#7CC4FF'),
+ 'didactek-horizontal-sin-lema-blanco.svg': logo_horizontal('#ffffff', '#7CC4FF', sub=False),
  'didactek-simbolo.svg': logo_icon(),
  'favicon.svg': favicon(),
 }

@@ -30,6 +30,8 @@ const isActive = (href: string) =>
     <meta property="og:description" content={description} />
     <meta property="og:type" content="website" />
     <link rel="icon" type="image/svg+xml" href={url('favicon.svg')} />
+    <link rel="apple-touch-icon" href={url('apple-touch-icon.png')} />
+    <meta name="theme-color" content="#0B2A5B" />
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="stylesheet" href={THEME === 'premium'
       ? 'https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,500;0,9..144,600;1,9..144,500&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap'
@@ -45,9 +47,8 @@ const isActive = (href: string) =>
     )}
     <header class="site-header">
       <nav class="container nav" aria-label="Principal">
-        <a class="brand" href={url()}>
-          {THEME === 'industrial' && <img src={url('favicon.svg')} alt="" width="32" height="32" />}
-          {SITE.nombre}
+        <a class="brand" href={url()} aria-label={`${SITE.nombre} — inicio`}>
+          <img src={url('logo/didactek-horizontal-sin-lema.svg')} alt={SITE.nombre} height="48" />
         </a>
         <button class="menu-toggle" aria-label="Abrir menú" aria-expanded="false" aria-controls="nav-links">☰</button>
         <ul class="nav-links" id="nav-links">
@@ -65,7 +66,7 @@ const isActive = (href: string) =>
       <div class="container">
         <div class="footer-grid">
           <div>
-            <h4>{SITE.nombre}</h4>
+            <img class="footer-logo" src={url('logo/didactek-horizontal-blanco.svg')} alt={SITE.nombre} />
             <p>{SITE.descripcion}</p>
           </div>
           <div>

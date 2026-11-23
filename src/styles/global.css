@@ -1,12 +1,12 @@
 :root {
   --bg: #ffffff;
   --bg-alt: #f4f6fb;
-  --text: #0f172a;
+  --text: #0E1B33;
   --muted: #526077;
   --border: #e2e8f0;
-  --primary: #1d4ed8;
-  --primary-dark: #1e3a8a;
-  --primary-soft: #e0e8ff;
+  --primary: #1A66C2;
+  --primary-dark: #0B2A5B;
+  --primary-soft: #E3EEFB;
   --accent: #f59e0b;
   --radius: 14px;
   --shadow: 0 1px 2px rgba(15, 23, 42, .06), 0 8px 24px rgba(15, 23, 42, .06);
@@ -47,7 +47,9 @@ h2 { font-size: clamp(1.5rem, 3vw, 2rem); }
 .site-header { position: sticky; top: 0; z-index: 50; background: rgba(255,255,255,.92); backdrop-filter: blur(8px); border-bottom: 1px solid var(--border); }
 .nav { display: flex; align-items: center; justify-content: space-between; height: 68px; }
 .brand { display: flex; align-items: center; gap: 10px; font-weight: 800; color: var(--text); text-decoration: none; font-size: 1.1rem; }
-.brand img { width: 32px; height: 32px; }
+.brand img { height: 48px; width: auto; }
+@media (max-width: 760px) { .brand img { height: 42px; } }
+.footer-logo { height: 64px; width: auto; margin-bottom: 14px; }
 .nav-links { display: flex; gap: 6px; list-style: none; margin: 0; padding: 0; align-items: center; }
 .nav-links a { text-decoration: none; color: var(--text); padding: 8px 12px; border-radius: 8px; font-weight: 500; }
 .nav-links a:hover, .nav-links a[aria-current="page"] { background: var(--primary-soft); color: var(--primary); }
@@ -62,12 +64,12 @@ h2 { font-size: clamp(1.5rem, 3vw, 2rem); }
 }
 
 /* Hero */
-.hero { background: #0b1f5c; color: #fff; padding: 72px 0 80px; }
+.hero { background: #0B2A5B; color: #fff; padding: 72px 0 80px; }
 .hero-grid { display: grid; grid-template-columns: 1.05fr 1fr; gap: 48px; align-items: center; }
 .hero-img { border-radius: 16px; overflow: hidden; background: #fff; }
 .hero-img img { width: 100%; aspect-ratio: 5/3; object-fit: cover; }
 @media (max-width: 860px) { .hero-grid { grid-template-columns: 1fr; } }
-.hero .eyebrow { color: #bfdbfe; }
+.hero .eyebrow { color: #9CC8F5; }
 .hero p { font-size: 1.15rem; color: #cbd5e1; max-width: 620px; }
 .hero-actions { display: flex; gap: 12px; flex-wrap: wrap; margin-top: 28px; }
 .hero .btn-primary { background: #fff; color: var(--primary-dark); }
@@ -143,10 +145,10 @@ h2 { font-size: clamp(1.5rem, 3vw, 2rem); }
 .notice.error { background: #fee2e2; color: #991b1b; }
 
 /* CTA y pie */
-.cta { background: var(--primary-dark); color: #fff; border-radius: 20px; padding: 48px; display: flex; justify-content: space-between; align-items: center; gap: 24px; flex-wrap: wrap; }
+.cta { background: #0B2A5B; color: #fff; border-radius: 20px; padding: 48px; display: flex; justify-content: space-between; align-items: center; gap: 24px; flex-wrap: wrap; }
 .cta p { color: #c7d2fe; margin: 0; }
 .cta .btn-primary { background: #fff; color: var(--primary-dark); }
-.site-footer { background: #0b1220; color: #94a3b8; padding: 48px 0 28px; margin-top: 64px; font-size: .93rem; }
+.site-footer { background: #081F45; color: #94a3b8; padding: 48px 0 28px; margin-top: 64px; font-size: .93rem; }
 .site-footer a { color: #cbd5e1; text-decoration: none; }
 .site-footer a:hover { color: #fff; }
 .footer-grid { display: grid; grid-template-columns: 2fr 1fr 1fr; gap: 32px; }
@@ -214,8 +216,8 @@ h2 { font-size: clamp(1.5rem, 3vw, 2rem); }
 
 /* ============ DISEÑO PREMIUM (editorial) ============ */
 html[data-theme="premium"] {
-  --bg: #f6f5f1; --bg-alt: #eceae3; --text: #1c2b22; --muted: #56655a; --border: #d8dbd2;
-  --primary: #1c2b22; --primary-dark: #0e1712; --primary-soft: #e4e8df; --accent: #a16207;
+  --bg: #f7f5f0; --bg-alt: #edeae2; --text: #0E1B33; --muted: #4f5a6b; --border: #dcd9d0;
+  --primary: #0B2A5B; --primary-dark: #071C3E; --primary-soft: #e3e8f0; --accent: #9a6a12;
   --radius: 6px; --shadow: none;
 }
 html[data-theme="premium"] body { background: var(--bg); }
@@ -223,12 +225,12 @@ html[data-theme="premium"] h1, html[data-theme="premium"] h2, html[data-theme="p
 html[data-theme="premium"] h1 { font-weight: 400; }
 html[data-theme="premium"] .eyebrow { color: var(--muted); letter-spacing: .14em; font-weight: 600; }
 html[data-theme="premium"] .btn { border-radius: 999px; }
-html[data-theme="premium"] .site-header { background: rgba(246,245,241,.94); border-bottom-color: transparent; }
+html[data-theme="premium"] .site-header { background: rgba(247,245,240,.94); border-bottom-color: transparent; }
 html[data-theme="premium"] .nav { height: 80px; }
 html[data-theme="premium"] .brand { font-family: "Fraunces", Georgia, serif; font-weight: 600; font-size: 1.55rem; }
 html[data-theme="premium"] .nav-links a { text-transform: uppercase; letter-spacing: .06em; font-size: .82rem; }
 html[data-theme="premium"] .nav-links a:hover, html[data-theme="premium"] .nav-links a[aria-current="page"] { background: transparent; color: var(--text); text-decoration: underline; text-underline-offset: 6px; }
-html[data-theme="premium"] .nav-links .btn { background: var(--primary); color: #f6f5f1; text-decoration: none; }
+html[data-theme="premium"] .nav-links .btn { background: var(--primary); color: #f7f5f0; text-decoration: none; }
 html[data-theme="premium"] .nav-links .btn:hover { background: var(--primary-dark); color: #fff; text-decoration: none; }
 html[data-theme="premium"] .card, html[data-theme="premium"] .hcard { border-color: var(--border); }
 html[data-theme="premium"] .card:hover { box-shadow: none; transform: translateY(-2px); }
@@ -239,9 +241,9 @@ html[data-theme="premium"] .feature { background: transparent; border: 0; border
 html[data-theme="premium"] .feature .icon { display: none; }
 html[data-theme="premium"] .feature h3 { font-family: "Fraunces", Georgia, serif; font-weight: 500; font-size: 1.3rem; }
 html[data-theme="premium"] .cta { background: var(--primary); border-radius: 6px; }
-html[data-theme="premium"] .cta p { color: #c6cfc8; }
-html[data-theme="premium"] .cta .btn-primary { background: #f6f5f1; color: var(--primary); }
-html[data-theme="premium"] .site-footer { background: #142019; }
+html[data-theme="premium"] .cta p { color: #c3cddd; }
+html[data-theme="premium"] .cta .btn-primary { background: #f7f5f0; color: var(--primary); }
+html[data-theme="premium"] .site-footer { background: #081F45; }
 html[data-theme="premium"] .tech-info .ref { color: var(--accent); }
 html[data-theme="premium"] .tech-row, html[data-theme="premium"] .tech-filters, html[data-theme="premium"] .box, html[data-theme="premium"] .hcard, html[data-theme="premium"] .card { background: #fbfaf7; }
 
