@@ -1,0 +1,71 @@
+---
+import { getCollection } from 'astro:content';
+import Base from '../layouts/Base.astro';
+import MaquetaCard from '../components/MaquetaCard.astro';
+import { SITE, FAMILIAS } from '../site.config';
+import { url } from '../utils';
+
+const todas = (await getCollection('maquetas')).sort((a, b) => a.data.orden - b.data.orden);
+const destacadas = todas.filter((m) => m.data.destacada).slice(0, 6);
+const familiasConMaquetas = FAMILIAS.filter((f) => todas.some((m) => m.data.familias.includes(f)));
+---
+<Base>
+  <section class="hero">
+    <div class="container">
+      <span class="eyebrow">Formación Profesional · Universidad</span>
+      <h1>{SITE.eslogan}</h1>
+      <p>Maquetas y entrenadores didácticos diseñados para que el alumnado practique con tecnología real del sector, de forma segura y alineada con los currículos oficiales.</p>
+      <div class="hero-actions">
+        <a class="btn btn-primary" href={url('catalogo')}>Ver catálogo</a>
+        <a class="btn btn-outline" href={url('contacto')}>Solicitar información</a>
+      </div>
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="container">
+      <span class="eyebrow">Destacadas</span>
+      <h2>Maquetas más solicitadas</h2>
+      <p class="muted">Equipos listos para el aula-taller, con documentación y guías de prácticas.</p>
+      <div class="grid" style="margin-top:28px">
+        {destacadas.map((m) => <MaquetaCard maqueta={m} />)}
+      </div>
+      <p style="margin-top:28px"><a class="btn btn-outline" href={url('catalogo')}>Ver las {todas.length} maquetas →</a></p>
+    </div>
+  </section>
+
+  <section class="section section-alt">
+    <div class="container">
+      <span class="eyebrow">Por qué elegirnos</span>
+      <h2>Pensadas para enseñar</h2>
+      <div class="features" style="margin-top:28px">
+        <div class="feature"><div class="icon">🎓</div><h3>Alineadas con el currículo</h3><p>Cada maqueta indica los ciclos formativos y grados a los que da respuesta.</p></div>
+        <div class="feature"><div class="icon">🏭</div><h3>Componentes industriales</h3><p>El alumnado trabaja con los mismos equipos que encontrará en la empresa.</p></div>
+        <div class="feature"><div class="icon">📘</div><h3>Guías de prácticas</h3><p>Documentación técnica y prácticas progresivas listas para el profesorado.</p></div>
+        <div class="feature"><div class="icon">🛠️</div><h3>Soporte y formación</h3><p>Instalación, formación al profesorado y asistencia técnica posventa.</p></div>
+      </div>
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="container">
+      <span class="eyebrow">Familias profesionales</span>
+      <h2>Explora por familia</h2>
+      <div class="tags" style="margin-top:16px; gap:10px">
+        {familiasConMaquetas.map((f) => (
+          <a class="btn btn-outline" href={url(`catalogo?familia=${encodeURIComponent(f)}`)}>{f}</a>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <section class="container">
+    <div class="cta">
+      <div>
+        <h2 style="margin:0 0 6px">¿Equipando un aula o laboratorio?</h2>
+        <p>Cuéntanos qué necesitas y te preparamos una propuesta a medida para tu centro.</p>
+      </div>
+      <a class="btn btn-primary" href={url('contacto')}>Pedir presupuesto</a>
+    </div>
+  </section>
+</Base>

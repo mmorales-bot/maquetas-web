@@ -1,0 +1,24 @@
+---
+import Base from '../layouts/Base.astro';
+import { SITE } from '../site.config';
+import { url } from '../utils';
+---
+<Base title="Nosotros">
+  <section class="section">
+    <div class="container prose">
+      <span class="eyebrow">Nosotros</span>
+      <h1>Tecnología real para el aula</h1>
+      <p class="muted" style="font-size:1.1rem">En {SITE.nombre} diseñamos y fabricamos equipos didácticos para centros de Formación Profesional y universidades.</p>
+      <h2>Nuestra misión</h2>
+      <p>Acercar la tecnología que se utiliza en la industria al alumnado, con maquetas robustas, seguras y acompañadas de material docente que facilita el trabajo del profesorado.</p>
+      <h2>Cómo trabajamos</h2>
+      <ul>
+        <li><strong>Análisis:</strong> estudiamos las necesidades del ciclo o asignatura.</li>
+        <li><strong>Diseño y fabricación:</strong> equipos estándar o personalizados para tu centro.</li>
+        <li><strong>Instalación y formación:</strong> puesta en marcha y formación al profesorado.</li>
+        <li><strong>Soporte:</strong> asistencia técnica, repuestos y actualizaciones.</li>
+      </ul>
+      <p style="margin-top:32px"><a class="btn btn-primary" href={url('contacto')}>Hablemos de tu proyecto</a></p>
+    </div>
+  </section>
+</Base>

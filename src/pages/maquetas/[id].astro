@@ -1,0 +1,80 @@
+---
+import { getCollection, render } from 'astro:content';
+import Base from '../../layouts/Base.astro';
+import MaquetaCard from '../../components/MaquetaCard.astro';
+import { url } from '../../utils';
+
+export async function getStaticPaths() {
+  const maquetas = await getCollection('maquetas');
+  return maquetas.map((m) => ({ params: { id: m.id }, props: { maqueta: m, todas: maquetas } }));
+}
+
+const { maqueta, todas } = Astro.props;
+const d = maqueta.data;
+const { Content } = await render(maqueta);
+const relacionadas = todas
+  .filter((m) => m.id !== maqueta.id && m.data.familias.some((f) => d.familias.includes(f)))
+  .slice(0, 3);
+const presupuesto = url(`contacto?maqueta=${encodeURIComponent(`${d.referencia} - ${d.titulo}`)}`);
+---
+<Base title={d.titulo} description={d.resumen}>
+  <section class="section">
+    <div class="container">
+      <nav class="breadcrumb"><a href={url()}>Inicio</a> / <a href={url('catalogo')}>Catálogo</a> / {d.referencia}</nav>
+
+      <div class="product">
+        <div class="product-img"><img src={url(d.imagen)} alt={d.titulo} width="500" height="300" /></div>
+        <div>
+          <span class="ref">REF. {d.referencia} · {d.tematica}</span>
+          <h1 style="font-size:clamp(1.7rem,3.5vw,2.4rem); margin-top:6px">{d.titulo}</h1>
+          <p class="lead">{d.resumen}</p>
+          <div class="tags">
+            {d.niveles.map((n) => <span class="tag tag-level">{n}</span>)}
+            {d.familias.map((f) => <span class="tag">{f}</span>)}
+          </div>
+          <div class="product-actions">
+            <a class="btn btn-primary" href={presupuesto}>Solicitar presupuesto</a>
+            {d.documentos[0] && <a class="btn btn-outline" href={url(d.documentos[0].archivo)} download>Descargar ficha</a>}
+          </div>
+        </div>
+      </div>
+
+      <div class="two-col" style="margin-top:56px">
+        <div class="prose"><Content /></div>
+        <div style="display:grid; gap:24px">
+          {d.especificaciones.length > 0 && (
+            <div class="box">
+              <h2 style="font-size:1.15rem">Especificaciones técnicas</h2>
+              <table class="specs">
+                <tbody>
+                  {d.especificaciones.map((s) => <tr><th>{s.nombre}</th><td>{s.valor}</td></tr>)}
+                </tbody>
+              </table>
+            </div>
+          )}
+          {d.ciclos.length > 0 && (
+            <div class="box">
+              <h2 style="font-size:1.15rem">Estudios a los que se dirige</h2>
+              <ul style="margin:0; padding-left:1.2em">{d.ciclos.map((c) => <li>{c}</li>)}</ul>
+            </div>
+          )}
+          {d.documentos.length > 0 && (
+            <div class="box">
+              <h2 style="font-size:1.15rem">Documentación</h2>
+              <ul class="docs">
+                {d.documentos.map((doc) => <li><a href={url(doc.archivo)} download>📄 {doc.titulo}</a></li>)}
+              </ul>
+            </div>
+          )}
+        </div>
+      </div>
+
+      {relacionadas.length > 0 && (
+        <div style="margin-top:64px">
+          <h2>Maquetas relacionadas</h2>
+          <div class="grid" style="margin-top:20px">{relacionadas.map((m) => <MaquetaCard maqueta={m} />)}</div>
+        </div>
+      )}
+    </div>
+  </section>
+</Base>

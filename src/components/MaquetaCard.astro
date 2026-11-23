@@ -1,0 +1,23 @@
+---
+import type { CollectionEntry } from 'astro:content';
+import { url } from '../utils';
+interface Props { maqueta: CollectionEntry<'maquetas'>; }
+const { maqueta } = Astro.props;
+const d = maqueta.data;
+---
+<article
+  class="card"
+  data-familias={d.familias.join('|')}
+  data-niveles={d.niveles.join('|')}
+  data-texto={`${d.titulo} ${d.referencia} ${d.resumen} ${d.tematica}`.toLowerCase()}
+>
+  <img src={url(d.imagen)} alt={d.titulo} loading="lazy" width="500" height="300" />
+  <div class="card-body">
+    <span class="ref">{d.referencia} · {d.tematica}</span>
+    <h3><a href={url(`maquetas/${maqueta.id}`)}>{d.titulo}</a></h3>
+    <p>{d.resumen}</p>
+    <div class="tags">
+      {d.niveles.map((n) => <span class="tag tag-level">{n}</span>)}
+    </div>
+  </div>
+</article>

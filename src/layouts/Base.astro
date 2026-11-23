@@ -1,0 +1,88 @@
+---
+import '../styles/global.css';
+import { SITE } from '../site.config';
+import { url } from '../utils';
+
+interface Props { title?: string; description?: string; }
+const { title, description = SITE.descripcion } = Astro.props;
+const fullTitle = title ? `${title} | ${SITE.nombre}` : `${SITE.nombre} — ${SITE.eslogan}`;
+const path = Astro.url.pathname.replace(import.meta.env.BASE_URL.replace(/\/$/, ''), '') || '/';
+const links = [
+  { href: '', label: 'Inicio' },
+  { href: 'catalogo', label: 'Catálogo' },
+  { href: 'nosotros', label: 'Nosotros' },
+];
+const isActive = (href: string) =>
+  href === '' ? path === '/' : path.startsWith('/' + href);
+---
+<!doctype html>
+<html lang="es">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>{fullTitle}</title>
+    <meta name="description" content={description} />
+    <meta property="og:title" content={fullTitle} />
+    <meta property="og:description" content={description} />
+    <meta property="og:type" content="website" />
+    <link rel="icon" type="image/svg+xml" href={url('favicon.svg')} />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" />
+  </head>
+  <body>
+    <header class="site-header">
+      <nav class="container nav" aria-label="Principal">
+        <a class="brand" href={url()}>
+          <img src={url('favicon.svg')} alt="" width="32" height="32" />
+          {SITE.nombre}
+        </a>
+        <button class="menu-toggle" aria-label="Abrir menú" aria-expanded="false" aria-controls="nav-links">☰</button>
+        <ul class="nav-links" id="nav-links">
+          {links.map((l) => (
+            <li><a href={url(l.href)} aria-current={isActive(l.href) ? 'page' : undefined}>{l.label}</a></li>
+          ))}
+          <li><a class="btn btn-primary" href={url('contacto')}>Pedir presupuesto</a></li>
+        </ul>
+      </nav>
+    </header>
+
+    <main><slot /></main>
+
+    <footer class="site-footer">
+      <div class="container">
+        <div class="footer-grid">
+          <div>
+            <h4>{SITE.nombre}</h4>
+            <p>{SITE.descripcion}</p>
+          </div>
+          <div>
+            <h4>Navegación</h4>
+            <ul>
+              <li><a href={url('catalogo')}>Catálogo</a></li>
+              <li><a href={url('nosotros')}>Nosotros</a></li>
+              <li><a href={url('contacto')}>Contacto</a></li>
+            </ul>
+          </div>
+          <div>
+            <h4>Contacto</h4>
+            <ul>
+              <li><a href={`mailto:${SITE.email}`}>{SITE.email}</a></li>
+              <li><a href={`tel:${SITE.telefono.replace(/\s/g, '')}`}>{SITE.telefono}</a></li>
+              <li>{SITE.direccion}</li>
+            </ul>
+          </div>
+        </div>
+        <div class="footer-bottom">© {new Date().getFullYear()} {SITE.nombre}. Todos los derechos reservados.</div>
+      </div>
+    </footer>
+
+    <script>
+      const btn = document.querySelector('.menu-toggle');
+      const menu = document.getElementById('nav-links');
+      btn?.addEventListener('click', () => {
+        const open = menu?.classList.toggle('open');
+        btn.setAttribute('aria-expanded', String(!!open));
+      });
+    </script>
+  </body>
+</html>

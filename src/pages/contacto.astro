@@ -1,0 +1,97 @@
+---
+import { getCollection } from 'astro:content';
+import Base from '../layouts/Base.astro';
+import { SITE, NIVELES } from '../site.config';
+
+const maquetas = (await getCollection('maquetas')).sort((a, b) => a.data.orden - b.data.orden);
+---
+<Base title="Contacto y presupuestos" description="Solicita información o presupuesto de maquetas didácticas para tu centro.">
+  <section class="section">
+    <div class="container two-col">
+      <div>
+        <span class="eyebrow">Contacto</span>
+        <h1>Solicita información o presupuesto</h1>
+        <p class="muted">Rellena el formulario y te responderemos en un plazo máximo de 48 horas laborables.</p>
+
+        <form class="form box" id="form" style="margin-top:24px" method="POST" action={SITE.formEndpoint || undefined} data-endpoint={SITE.formEndpoint} data-email={SITE.email}>
+          <div class="form-row">
+            <label>Nombre y apellidos *<input name="nombre" required autocomplete="name" /></label>
+            <label>Correo electrónico *<input name="email" type="email" required autocomplete="email" /></label>
+          </div>
+          <div class="form-row">
+            <label>Centro educativo *<input name="centro" required autocomplete="organization" /></label>
+            <label>Teléfono<input name="telefono" type="tel" autocomplete="tel" /></label>
+          </div>
+          <div class="form-row">
+            <label>Tipo de centro
+              <select name="nivel">
+                <option value="">Selecciona…</option>
+                {NIVELES.map((n) => <option>{n}</option>)}
+                <option>Otro</option>
+              </select>
+            </label>
+            <label>Maqueta de interés
+              <select name="maqueta" id="maqueta">
+                <option value="">General / varias</option>
+                {maquetas.map((m) => <option>{`${m.data.referencia} - ${m.data.titulo}`}</option>)}
+              </select>
+            </label>
+          </div>
+          <label>Mensaje *<textarea name="mensaje" rows="5" required placeholder="Número de puestos, plazos, necesidades específicas…"></textarea></label>
+          <label class="check"><input type="checkbox" required /> Acepto que mis datos se usen para responder a esta solicitud.</label>
+          <input type="text" name="_gotcha" style="display:none" tabindex="-1" autocomplete="off" />
+          <div><button class="btn btn-primary" type="submit">Enviar solicitud</button></div>
+          <div id="status" role="status"></div>
+        </form>
+      </div>
+
+      <aside class="box" style="margin-top:8px">
+        <h2 style="font-size:1.2rem">Datos de contacto</h2>
+        <p>📧 <a href={`mailto:${SITE.email}`}>{SITE.email}</a></p>
+        <p>📞 <a href={`tel:${SITE.telefono.replace(/\s/g, '')}`}>{SITE.telefono}</a></p>
+        <p>📍 {SITE.direccion}</p>
+        <hr style="border:0; border-top:1px solid var(--border); margin:20px 0" />
+        <h3 style="font-size:1rem">¿Licitación o contratación pública?</h3>
+        <p class="muted" style="margin:0">Preparamos la documentación técnica necesaria para expedientes de contratación de centros públicos.</p>
+      </aside>
+    </div>
+  </section>
+
+  <script>
+    const form = document.getElementById('form') as HTMLFormElement;
+    const status = document.getElementById('status')!;
+    const select = document.getElementById('maqueta') as HTMLSelectElement;
+
+    const pre = new URLSearchParams(location.search).get('maqueta');
+    if (pre) {
+      const opt = Array.from(select.options).find((o) => o.value === pre);
+      if (opt) select.value = pre;
+    }
+
+    form.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const data = new FormData(form);
+      const endpoint = form.dataset.endpoint;
+      if (!endpoint) {
+        // Sin servicio de formularios configurado: abre el correo del visitante.
+        const body = ['nombre', 'email', 'centro', 'telefono', 'nivel', 'maqueta', 'mensaje']
+          .map((k) => `${k}: ${data.get(k) || ''}`).join('\n');
+        const subject = `Solicitud de información${data.get('maqueta') ? ' - ' + data.get('maqueta') : ''}`;
+        location.href = `mailto:${form.dataset.email}?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
+        return;
+      }
+      status.className = '';
+      status.textContent = 'Enviando…';
+      try {
+        const res = await fetch(endpoint, { method: 'POST', body: data, headers: { Accept: 'application/json' } });
+        if (!res.ok) throw new Error();
+        form.reset();
+        status.className = 'notice';
+        status.textContent = '¡Gracias! Hemos recibido tu solicitud y te contestaremos pronto.';
+      } catch {
+        status.className = 'notice error';
+        status.textContent = 'No se pudo enviar. Escríbenos directamente a ' + form.dataset.email;
+      }
+    });
+  </script>
+</Base>

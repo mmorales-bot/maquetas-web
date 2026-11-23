@@ -1,0 +1,87 @@
+---
+import { getCollection } from 'astro:content';
+import Base from '../layouts/Base.astro';
+import MaquetaCard from '../components/MaquetaCard.astro';
+import { FAMILIAS, NIVELES } from '../site.config';
+
+const todas = (await getCollection('maquetas')).sort((a, b) => a.data.orden - b.data.orden);
+const familias = FAMILIAS.filter((f) => todas.some((m) => m.data.familias.includes(f)));
+---
+<Base title="Catálogo" description="Catálogo de maquetas y entrenadores didácticos para FP y universidad.">
+  <section class="section">
+    <div class="container">
+      <span class="eyebrow">Catálogo</span>
+      <h1>Maquetas didácticas</h1>
+      <p class="muted">Filtra por familia profesional, nivel educativo o busca por nombre o referencia.</p>
+
+      <div class="catalog" style="margin-top:32px">
+        <aside class="filters" aria-label="Filtros">
+          <h3>Buscar</h3>
+          <input type="search" id="q" placeholder="PLC, neumática, MD-RTU…" aria-label="Buscar maquetas" />
+          <h3>Nivel educativo</h3>
+          {NIVELES.map((n) => (
+            <label><input type="checkbox" name="nivel" value={n} /> {n}</label>
+          ))}
+          <h3>Familia profesional</h3>
+          {familias.map((f) => (
+            <label><input type="checkbox" name="familia" value={f} /> {f}</label>
+          ))}
+          <button class="link-btn" id="reset" type="button">Limpiar filtros</button>
+        </aside>
+
+        <div>
+          <div class="results-bar"><span id="count">{todas.length} maquetas</span></div>
+          <div class="grid" id="results">
+            {todas.map((m) => <MaquetaCard maqueta={m} />)}
+          </div>
+          <div class="empty" id="empty" hidden>No hay maquetas que coincidan con los filtros. <button class="link-btn" id="reset2" type="button">Limpiar filtros</button></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <script>
+    const q = document.getElementById('q') as HTMLInputElement;
+    const cards = Array.from(document.querySelectorAll<HTMLElement>('#results .card'));
+    const boxes = Array.from(document.querySelectorAll<HTMLInputElement>('.filters input[type=checkbox]'));
+    const count = document.getElementById('count')!;
+    const empty = document.getElementById('empty')!;
+
+    const checked = (name: string) => boxes.filter((b) => b.name === name && b.checked).map((b) => b.value);
+
+    function apply() {
+      const texto = q.value.trim().toLowerCase();
+      const niveles = checked('nivel');
+      const familias = checked('familia');
+      let visibles = 0;
+      for (const c of cards) {
+        const cn = c.dataset.niveles!.split('|');
+        const cf = c.dataset.familias!.split('|');
+        const ok =
+          (!texto || c.dataset.texto!.includes(texto)) &&
+          (!niveles.length || niveles.some((n) => cn.includes(n))) &&
+          (!familias.length || familias.some((f) => cf.includes(f)));
+        c.hidden = !ok;
+        if (ok) visibles++;
+      }
+      count.textContent = `${visibles} ${visibles === 1 ? 'maqueta' : 'maquetas'}`;
+      empty.hidden = visibles > 0;
+    }
+
+    function reset() {
+      q.value = '';
+      boxes.forEach((b) => (b.checked = false));
+      apply();
+    }
+
+    // Filtro inicial desde la URL (?familia=...&nivel=...)
+    const params = new URLSearchParams(location.search);
+    for (const b of boxes) if (params.getAll(b.name).includes(b.value)) b.checked = true;
+
+    q.addEventListener('input', apply);
+    boxes.forEach((b) => b.addEventListener('change', apply));
+    document.getElementById('reset')!.addEventListener('click', reset);
+    document.getElementById('reset2')!.addEventListener('click', reset);
+    apply();
+  </script>
+</Base>
