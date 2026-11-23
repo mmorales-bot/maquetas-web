@@ -23,7 +23,18 @@ const presupuesto = url(`contacto?maqueta=${encodeURIComponent(`${d.referencia} 
       <nav class="breadcrumb"><a href={url()}>Inicio</a> / <a href={url('catalogo')}>Catálogo</a> / {d.referencia}</nav>
 
       <div class="product">
-        <div class="product-img"><img src={url(d.imagen)} alt={d.titulo} width="500" height="300" /></div>
+        <div>
+          <div class="product-img"><img id="main-img" src={url(d.imagen)} alt={d.titulo} width="1600" height="960" /></div>
+          {d.galeria.length > 0 && (
+            <div class="thumbs">
+              {[d.imagen, ...d.galeria].map((g, i) => (
+                <button type="button" class:list={['thumb', { active: i === 0 }]} data-src={url(g)} aria-label={`Ver foto ${i + 1}`}>
+                  <img src={url(g)} alt="" loading="lazy" />
+                </button>
+              ))}
+            </div>
+          )}
+        </div>
         <div>
           <span class="ref">REF. {d.referencia} · {d.tematica}</span>
           <h1 style="font-size:clamp(1.7rem,3.5vw,2.4rem); margin-top:6px">{d.titulo}</h1>
@@ -77,4 +88,14 @@ const presupuesto = url(`contacto?maqueta=${encodeURIComponent(`${d.referencia} 
       )}
     </div>
   </section>
+  <script>
+    const main = document.getElementById('main-img') as HTMLImageElement | null;
+    document.querySelectorAll<HTMLButtonElement>('.thumb').forEach((b) =>
+      b.addEventListener('click', () => {
+        if (main) main.src = b.dataset.src!;
+        document.querySelectorAll('.thumb').forEach((t) => t.classList.remove('active'));
+        b.classList.add('active');
+      })
+    );
+  </script>
 </Base>

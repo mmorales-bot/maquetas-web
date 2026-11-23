@@ -10,6 +10,7 @@ const maquetas = defineCollection({
     referencia: z.string(),
     resumen: z.string(),
     imagen: z.string(),
+    galeria: z.array(z.string()).default([]),
     familias: z.array(z.enum(FAMILIAS)).min(1),
     niveles: z.array(z.enum(NIVELES)).min(1),
     tematica: z.string(),
