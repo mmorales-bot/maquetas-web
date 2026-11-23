@@ -7,7 +7,7 @@ familias: [Electricidad y Electrónica, Instalación y Mantenimiento]
 niveles: [Grado Medio]
 tematica: Instalaciones eléctricas
 destacada: true
-orden: 3
+orden: 12
 especificaciones:
   - { nombre: Estructura, valor: "Perfil de aluminio con panel perforado y carril DIN" }
   - { nombre: Protecciones, valor: "IGA, diferencial 30 mA, magnetotérmicos" }

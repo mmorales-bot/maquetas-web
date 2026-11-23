@@ -6,7 +6,7 @@ imagen: img/neumatica.svg
 familias: [Fabricación Mecánica, Instalación y Mantenimiento]
 niveles: [Grado Medio, Grado Superior]
 tematica: Neumática
-orden: 4
+orden: 13
 especificaciones:
   - { nombre: Actuadores, valor: "Cilindros de simple y doble efecto, motor neumático" }
   - { nombre: Válvulas, valor: "3/2, 5/2 monoestables y biestables, reguladoras" }

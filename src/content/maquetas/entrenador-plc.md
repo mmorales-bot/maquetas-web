@@ -7,7 +7,7 @@ familias: [Electricidad y Electrónica, Instalación y Mantenimiento]
 niveles: [Grado Medio, Grado Superior, Universidad]
 tematica: Automatización industrial
 destacada: true
-orden: 1
+orden: 10
 especificaciones:
   - { nombre: Autómata, valor: "PLC industrial con 14 E / 10 S digitales" }
   - { nombre: E/S analógicas, valor: "2 entradas 0-10 V, 1 salida 0-10 V" }

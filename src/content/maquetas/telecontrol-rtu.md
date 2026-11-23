@@ -7,7 +7,7 @@ familias: [Informática y Comunicaciones, Energía y Agua, Electricidad y Electr
 niveles: [Grado Superior, Universidad]
 tematica: Telecontrol y SCADA
 destacada: true
-orden: 2
+orden: 11
 especificaciones:
   - { nombre: Remota, valor: "RTU con E/S digitales y analógicas (4-20 mA)" }
   - { nombre: Protocolos, valor: "Modbus RTU/TCP, MQTT, IEC 60870-5-104" }
