@@ -1,7 +1,7 @@
 ---
 titulo: Kit Sysmac Control
 referencia: NX1P_IO
-resumen: Kit portátil con autómata Omron NX1P2 de la plataforma Sysmac, entradas y salidas cableadas a bornas y panel de mando para aprender programación de PLC y comunicaciones industriales.
+resumen: Kit portátil con autómata Omron NX1P2-9B24DT1 de la plataforma Sysmac, entradas y salidas cableadas a bornas y panel de mando para aprender programación de PLC y comunicaciones industriales.
 imagen: img/kit-sysmac-control.jpg
 galeria:
   - img/kit-sysmac-control-detalle.jpg
@@ -11,7 +11,8 @@ tematica: Automatización industrial
 destacada: true
 orden: 0
 especificaciones:
-  - { nombre: Autómata, valor: "Omron NX1P2 (plataforma Sysmac)" }
+  - { nombre: Autómata, valor: "Omron NX1P2-9B24DT1 (plataforma Sysmac)" }
+  - { nombre: E/S integradas, valor: "24 E/S digitales: 14 entradas y 10 salidas de transistor PNP" }
   - { nombre: Comunicaciones, valor: "Puertos EtherNet/IP y EtherCAT integrados" }
   - { nombre: Alimentación, valor: "Fuente de alimentación 24 V DC en carril DIN" }
   - { nombre: Conexionado, valor: "E/S llevadas a bornas de resorte identificadas" }
@@ -27,7 +28,7 @@ ciclos:
 ---
 
 El **Kit Sysmac Control** es un equipo de prácticas compacto y portátil construido
-alrededor del autómata **Omron NX1P2**, de la plataforma de automatización Sysmac.
+alrededor del autómata **Omron NX1P2-9B24DT1**, de la plataforma de automatización Sysmac.
 Todo el cableado está hecho y llevado a bornas identificadas, de modo que el alumnado
 puede centrarse en programar, conectar sensores y actuadores externos y poner en
 marcha el sistema.

@@ -14,7 +14,7 @@ Abre `src/site.config.ts` y cambia nombre, eslogan, email, teléfono, dirección
 
 ## Añadir una maqueta nueva
 
-1. Copia un archivo de `src/content/maquetas/` (p. ej. `entrenador-plc.md`) y renómbralo.
+1. Copia un archivo de `src/content/maquetas/` (p. ej. `kit-sysmac-control.md`) y renómbralo.
    El nombre del archivo será la dirección de la ficha: `mi-maqueta.md` → `/maquetas/mi-maqueta`.
 2. Edita la cabecera (entre `---`):
    - `titulo`, `referencia`, `resumen`, `tematica`
