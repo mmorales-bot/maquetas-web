@@ -2,8 +2,8 @@
 //  CONFIGURACIÓN GENERAL DEL SITIO — edita estos datos
 // ================================================================
 export const SITE = {
-  nombre: 'Maquetas Didácticas',
-  eslogan: 'Equipos de prácticas para Formación Profesional y Universidad',
+  nombre: 'CloudRTU',
+  eslogan: 'Maquetas didácticas para Formación Profesional y Universidad',
   descripcion:
     'Catálogo de maquetas y entrenadores didácticos para centros de Formación Profesional y universidades: automatización, electricidad, telecontrol y más.',
   email: 'info@tu-dominio.com',
